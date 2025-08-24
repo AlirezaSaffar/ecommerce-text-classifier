@@ -1,0 +1,355 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{fullpage}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage{geometry}
+\usepackage{caption}
+\usepackage{xepersian}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{bidi} 
+\usepackage{enumitem}
+\usepackage{float}
+
+\setlength{\parindent}{0pt}
+% Colors
+\definecolor{titlepagecolor}{cmyk}{0.75,0.68,0.67,0.90} % Cover background
+\definecolor{CustomAccent}{HTML}{2BAB8C} % Accent color for English text
+%\definecolor{CustomBackground}{HTML}{1C1C1C} % Background for content pages
+\definecolor{CustomBackground}{cmyk}{0.75,0.68,0.67,0.90}% Background for content pages
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\definecolor{codebg}{cmyk}{0.75,0.68,0.67,0.90} % same as CustomBackground
+\definecolor{accent}{HTML}{2BAB8C} % same as CustomAccent
+\definecolor{codegray}{rgb}{0.8,0.8,0.8}
+\definecolor{codegreen}{rgb}{0.4,1,0.4}
+\definecolor{codepurple}{rgb}{1,0.6,1}
+\definecolor{keywordcolor}{rgb}{1,0.3,0.6}
+
+\lstdefinestyle{darkstyle}{
+	backgroundcolor=\color{codebg},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{keywordcolor},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize\color{white},
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=10pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=4,
+	frame=single,
+	rulecolor=\color{accent}
+}
+
+\lstset{style=darkstyle}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+% Persian and Latin fonts
+\settextfont{Vazir.ttf}[BoldFont = Vazir-Bold.ttf, Path = fonts/]
+\setlatintextfont{Times New Roman}
+
+% Line spacing
+\renewcommand{\baselinestretch}{1.2}
+\renewcommand{\thesection}{\arabic{section})}
+
+\color{white}
+
+
+% Homework number
+\newcommand{\HomeworkNumber}{1}
+
+% Cover-only settings
+\pagenumbering{gobble}
+
+% ---------- COVER PAGE ----------
+\begin{document}
+	\begin{latin}
+		\begin{titlepage}
+			\newgeometry{top=1in,bottom=1in,right=0in,left=0in}
+			\thispagestyle{empty}
+			\pagecolor{titlepagecolor}
+			\color{white}
+			\begin{center}
+				\vspace*{\stretch{1}}
+				
+				{\fontsize{48}{0}\bfseries\selectfont \color{CustomAccent} COMPUTATIONAL INTELLIGENCE}
+				
+				\vskip 1.5\baselineskip
+				{\fontsize{24}{0}\selectfont FINAL PROJECT DOCUMENTATION}
+				
+				\vspace*{\stretch{2}}
+				\adjincludegraphics[width=1\paperwidth]{assets/cover2.png}
+				
+				\vspace*{\stretch{2}}
+				{\fontsize{20}{0}\selectfont \color{CustomAccent}
+					Ferdowsi University of Mashhad \\
+					Department of Computer Engineering
+				}
+				
+				\vskip 1.5\baselineskip
+				{\Large SPRING 2025}
+				
+				\vspace*{\stretch{1}}
+			\end{center}
+		\end{titlepage}
+	\end{latin}
+	
+	% ---------- RESET PAGE SETTINGS ----------
+	\clearpage
+	\nopagecolor
+	\pagecolor{CustomBackground}
+	\color{white}
+	\newgeometry{top=1in,bottom=1in,left=1in,right=1in}
+	\pagenumbering{arabic}
+	
+	% ---------- HEADER (PERSIAN) ----------
+	\hrule \medskip
+	\begin{minipage}{0.295\textwidth}
+		\raggedleft \color{CustomAccent}
+		مبانی هوش محاسباتی\\
+		دانشگاه فردوسی مشهد\\
+		گروه مهندسی کامپیوتر
+	\end{minipage}
+	\begin{minipage}{0.4\textwidth}
+		\centering 
+		\includegraphics[scale=0.3]{assets/fum-logo.png}
+	\end{minipage}
+	\begin{minipage}{0.295\textwidth} \color{CustomAccent}
+		داکیومنت پروژه نهایی \\
+		دکتر فضل ارثی \\
+		بهار 1404
+	\end{minipage}
+	\medskip\hrule
+	\bigskip	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	\begin{table}[h]
+		\centering
+		\begin{tabular}{|l|l|}
+			\hline
+			\textbf{نام و نام خانوادگی} & \textbf{شماره دانشجویی} \\
+			\hline
+			امیرحسین افشار & 4012262196 \\
+			\hline
+			علیرضا صفار & 4011262281 \\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+		پیاده سازی پروژه در این رپو گیتهاب قابل مشاهده می باشد.
+		\begin{latin}
+				\begin{itemize}
+						\item \href{https://github.com/AlirezaSaffar/ecommerce-text-classifier}{https://github.com/AlirezaSaffar/ecommerce-text-classifier}
+					\end{itemize}
+			\end{latin}
+		
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	
+\section{فاز صفرم: دیتا پروفایلینگ}
+
+در ابتدا و مانند هر پروژه ای که با یادگیری سر و کار دارد، دیتا پروفایلینگ را انجام دادیم که بتوانیم insight هایی در رابطه با دیتایی که بر روی آن کار میکنیم بدست بیاوریم.
+
+\begin{enumerate}
+	\item 
+	بررسی تعداد سطر های داده:
+	
+	تعداد سطر های داده را بدست آوردیم که به شرح زیر است:
+	\begin{table}[h]
+		\centering
+		\begin{tabular}{|l|l|}
+			\hline
+			\textbf{Property} & \textbf{Value} \\
+			\hline
+			Shape & (58423, 2) \\
+			\hline
+			Columns & 'category' 'description' \\
+			\hline
+		\end{tabular}
+		\caption{اطلاعات کلی}
+	\end{table}
+	
+	\item 
+	بررسی تعداد سطر های null و یا تکراری:
+	
+	تعداد سطر های null برابر صفر بود، اما تعداد سطر های تکراری را برابر با مقدار تقریبی 22k بدست آوردیم که تقریبا 40 درصد دیتاست را تشکیل می داد. در فاز بعدی یعنی فاز اول: دیتا پریپروسسینگ، کل آنها را drop کردیم و فقط مقادیر unique را نگه داری کردیم. شایان ذکر است که در دیتاست اولیه، گاها حتی از یک دیتاپوینت بیش از 30 بار تکرار داشتیم.
+	
+	\item 
+	بررسی تعداد کتگوری ها و میزان درصد هرکدام از آنها:
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.8]{assets/1.png}
+		\caption{\textcolor{CustomAccent}{توزیع کتگوری ها}}
+	\end{figure}
+	همانطور که در شکل 1 مشخص است، نزدیک به 40 درصد داده ها را به تنهایی کتگوری household تشکیل داده اند و closing کمترین درصد را به خود اختصاص داده که نشان می دهد ممکن است در مرحله فاز اخر با بایاس شدن به سمت کتگوری ها رو به رو شویم. در این رابطه در بخش اخر بیشتر توضیح داده شده است.
+	
+	\item 
+	بررسی کلمات پرتکرار هر کتگوری:
+	
+	در ابتدا به شکل خام و سپس با اعمال حذف به شکل ساده این کار را انجام دادیم.
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{assets/2.png}
+	\caption{\textcolor{CustomAccent}{نتیجه خام}}
+\end{figure}
+همانطور که در شکل 2 مشخص است نشان داده می شود که باید حذفیات کلمات غیرضروری اضافه صورت بگیرد تا بتوان  به داده معناداری رسید.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{assets/3.png}
+	\caption{\textcolor{CustomAccent}{نتیجه با اعمال حذف کلمات غیرضروری}}
+\end{figure}
+
+نتیجه شکل 3 به طور کلی نشان می دهد که کلمات به خوبی در دامنه خود قابل تشخیص هستند.
+
+	\item 
+	
+	بررسی n-gram ها به ازای 2 و 3:
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.5]{assets/4.png}
+		\caption{\textcolor{CustomAccent}{بررسی 2گرم ها}}
+	\end{figure}
+	
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.5]{assets/5.png}
+		\caption{\textcolor{CustomAccent}{بررسی 3گرم ها}}
+	\end{figure}
+
+شکل های 4 و 5 را بررسی کنید. با توجه به n-gram ها میتوان توجه ویژه ای به واحد ها و یونیت های اندازه گیری ای کرد. به این شکل که وقتی عبارتی نظیر:
+\begin{latin}
+	a good quality table with 150 cm * 24 cm * 90 cm
+\end{latin}
+رو به رو می شویم، پس از حذف ستاره و عدد ها با عبارت:
+\begin{latin}
+	cm cm cm 
+\end{latin}
+رو به رو می شویم که به این صورت بیش از 400 بار در دو کتگوری متفاوت رخ داده است و به طرز زیادی قرار است یادگیری بردارها را سخت کند. به این موضوع در پری پروسس توجه ویژه ای کردیم و عبارت بالا را کاملا درست کردیم و نرمالایز کردیم. توضیح بیشتر در بخش پری پروسس آمده است.
+
+\end{enumerate}
+
+\pagebreak
+
+\section{فاز اول: پری پروسسینگ}
+
+در ابتدا سطر های تکراری را حذف کرده و سپس، برای پری پروسسینگ مراحل زیر را انجام دادیم و چنین پایپلاینی داشتیم:
+\begin{latin}
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|l|l|}
+			\hline
+			\textbf{Step} & \textbf{Function} \\
+			\hline
+			0 & Normalize units and remove singletons \\
+			\hline
+			1 & Expand contractions \\
+			\hline
+			2 & Convert to lowercase \\
+			\hline
+			3 & Remove numbers \\
+			\hline
+			4 & Remove punctuation \\
+			\hline
+			5 & Remove special characters \& emojis \\
+			\hline
+			6 & Normalize whitespace \\
+			\hline
+			7 & Tokenize text \\
+			\hline
+			8 & Remove stopwords \\
+			\hline
+			9 & Lemmatize tokens \\
+			\hline
+			10 & Clean empty tokens \\
+			\hline
+		\end{tabular}
+		\label{tab:preprocessing_steps}
+	\end{table}
+\end{latin}
+
+توضیحات بیشتر به شرح زیر است:
+\begin{enumerate}
+	\item Normalize-units-and-remove-singletons
+	
+	همانطور که در بخش پروفایلینگ اشاره شد، واحدهای اندازه گیری مانند cm، gb، mhz به شکل استاندارد تبدیل شدند و کاراکترهای تکراری حذف شدند و نرمالایز شدند. 
+	
+	\item Expand-contractions
+	
+	برای جملاتی که عموما به شکل not+verb خلاصه می شوند به کار بردیم. 
+	\item Convert-to-lowercase
+	
+	برای این که همه کلمات یکنواخت باشند.
+	\item Remove-numbers
+	
+	از آنجا که اعداد نمی توانستند بردارهایی معنادار بسازند، همه اعداد را حذف کردیم
+	\item Remove-punctuation
+	
+	علائم نگارشی مانند کاما و نقطه برای تحلیل متن مفید نبودند و حذف شدند.
+	\item Remove-special-characters-\&-emojis
+	
+	کاراکترهای خاص و ایموجی ها که معنای خاصی برای مدل نداشتند حذف شدند.
+	\item Normalize-whitespace
+	
+	فاصله های اضافی و تب ها به یک فاصله ساده تبدیل شدند.
+	\item Tokenize-text
+	
+	متن به کلمات جداگانه تقسیم شد تا قابل پردازش باشد.
+	\item Remove-stopwords
+	
+	کلمات رایج و بی معنی مانند "the" و "and" حذف شدند.
+	\item Lemmatize-tokens
+	
+	کلمات به شکل ریشه ای خود تبدیل شدند تا تنوع کاهش یابد.
+	\item Clean-empty-tokens
+	
+	توکن های خالی و بی معنی از نتیجه نهایی حذف شدند.
+\end{enumerate}
+در نهایت یک مثال آورده می شود که اهمیت این پایپلاین دقیق تر نشان داده شود:
+
+جمله ورودی:
+\begin{latin}
+	SAF 'Floral' Framed Painting (Wood, 30 inch x 10 inch, Special Effect UV Print Textured, SAO297) Painting made up in synthetic frame with UV textured print which gives multi effects and attracts towards it. This is an special series of paintings which makes your wall very beautiful and gives a royal touch (A perfect gift for your special ones).
+\end{latin}
+
+و خروجی توکن های آن به این شکل در آمد:
+\begin{latin}
+	['saf', 'floral', 'frame', 'paint', 'wood', 'numinch', 'special', 'effect', 'uv', 'print', 'textured', 'sao', 'painting', 'make', 'synthetic', 'frame', 'uv', 'textured', 'print', 'give', 'multi', 'effect', 'attract', 'towards', 'special', 'series', 'painting', 'make', 'wall', 'beautiful', 'give', 'royal', 'touch', 'perfect', 'gift', 'special', 'one']
+\end{latin}
+
+مهم تر از همه توجهان را به بخش واحد های اندازه گیری جلب می کنیم که به جای 
+\begin{latin}
+	inch inch 
+\end{latin}
+به چنین توکن (بدون تکرار و یکبار آمده) تبدیل شده
+\begin{latin}
+	numinch
+\end{latin}
+و بنابراین کاملا هم ارتباط عدد و اندازه را حفظ می کند و هم اطلاعات با ارزشی را دور نمیریزد و هم نمایش بهتری را حاصل می شود.
+
+
+\end{document}
