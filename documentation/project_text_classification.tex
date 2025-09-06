@@ -157,199 +157,626 @@
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
-		پیاده سازی پروژه در این رپو گیتهاب قابل مشاهده می باشد.
-		\begin{latin}
-				\begin{itemize}
-						\item \href{https://github.com/AlirezaSaffar/ecommerce-text-classifier}{https://github.com/AlirezaSaffar/ecommerce-text-classifier}
-					\end{itemize}
-			\end{latin}
-		
+	پیاده سازی پروژه در این رپو گیتهاب قابل مشاهده می باشد.
+	\begin{latin}
+		\begin{itemize}
+			\item \href{https://github.com/AlirezaSaffar/ecommerce-text-classifier}{https://github.com/AlirezaSaffar/ecommerce-text-classifier}
+		\end{itemize}
+	\end{latin}
+	
 	
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
 	
-\section{فاز صفرم: دیتا پروفایلینگ}
-
-در ابتدا و مانند هر پروژه ای که با یادگیری سر و کار دارد، دیتا پروفایلینگ را انجام دادیم که بتوانیم insight هایی در رابطه با دیتایی که بر روی آن کار میکنیم بدست بیاوریم.
-
-\begin{enumerate}
-	\item 
-	بررسی تعداد سطر های داده:
+	\section*{فاز صفرم: دیتا پروفایلینگ}
 	
-	تعداد سطر های داده را بدست آوردیم که به شرح زیر است:
+	در ابتدا و مانند هر پروژه ای که با یادگیری سر و کار دارد، دیتا پروفایلینگ را انجام دادیم که بتوانیم insight هایی در رابطه با دیتایی که بر روی آن کار میکنیم بدست بیاوریم.
+	
+	\begin{enumerate}
+		\item 
+		بررسی تعداد سطر های داده:
+		
+		تعداد سطر های داده را بدست آوردیم که به شرح زیر است:
+		\begin{table}[h]
+			\centering
+			\begin{tabular}{|l|l|}
+				\hline
+				\textbf{Property} & \textbf{Value} \\
+				\hline
+				Shape & (58423, 2) \\
+				\hline
+				Columns & 'category' 'description' \\
+				\hline
+			\end{tabular}
+			\caption{اطلاعات کلی}
+		\end{table}
+		
+		\item 
+		بررسی تعداد سطر های null و یا تکراری:
+		
+		تعداد سطر های null برابر صفر بود، اما تعداد سطر های تکراری را برابر با مقدار تقریبی 22k بدست آوردیم که تقریبا 40 درصد دیتاست را تشکیل می داد. در فاز بعدی یعنی فاز اول: دیتا پریپروسسینگ، کل آنها را drop کردیم و فقط مقادیر unique را نگه داری کردیم. شایان ذکر است که در دیتاست اولیه، گاها حتی از یک دیتاپوینت بیش از 30 بار تکرار داشتیم.
+		
+		\item 
+		بررسی تعداد کتگوری ها و میزان درصد هرکدام از آنها:
+		\begin{figure}[h]
+			\centering
+			\includegraphics[scale=0.8]{assets/1.png}
+			\caption{\textcolor{CustomAccent}{توزیع کتگوری ها}}
+		\end{figure}
+		همانطور که در شکل 1 مشخص است، نزدیک به 40 درصد داده ها را به تنهایی کتگوری household تشکیل داده اند و closing کمترین درصد را به خود اختصاص داده که نشان می دهد ممکن است در مرحله فاز اخر با بایاس شدن به سمت کتگوری ها رو به رو شویم. در این رابطه در بخش اخر بیشتر توضیح داده شده است.
+		
+		\item 
+		بررسی کلمات پرتکرار هر کتگوری:
+		
+		در ابتدا به شکل خام و سپس با اعمال حذف به شکل ساده این کار را انجام دادیم.
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.5]{assets/2.png}
+			\caption{\textcolor{CustomAccent}{نتیجه خام}}
+		\end{figure}
+		همانطور که در شکل 2 مشخص است نشان داده می شود که باید حذفیات کلمات غیرضروری اضافه صورت بگیرد تا بتوان  به داده معناداری رسید.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.5]{assets/3.png}
+			\caption{\textcolor{CustomAccent}{نتیجه با اعمال حذف کلمات غیرضروری}}
+		\end{figure}
+		
+		نتیجه شکل 3 به طور کلی نشان می دهد که کلمات به خوبی در دامنه خود قابل تشخیص هستند.
+		
+		\item 
+		
+		بررسی n-gram ها به ازای 2 و 3:
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.5]{assets/4.png}
+			\caption{\textcolor{CustomAccent}{بررسی 2گرم ها}}
+		\end{figure}
+		
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.5]{assets/5.png}
+			\caption{\textcolor{CustomAccent}{بررسی 3گرم ها}}
+		\end{figure}
+		
+		شکل های 4 و 5 را بررسی کنید. با توجه به n-gram ها میتوان توجه ویژه ای به واحد ها و یونیت های اندازه گیری ای کرد. به این شکل که وقتی عبارتی نظیر:
+		\begin{latin}
+			a good quality table with 150 cm * 24 cm * 90 cm
+		\end{latin}
+		رو به رو می شویم، پس از حذف ستاره و عدد ها با عبارت:
+		\begin{latin}
+			cm cm cm 
+		\end{latin}
+		رو به رو می شویم که به این صورت بیش از 400 بار در دو کتگوری متفاوت رخ داده است و به طرز زیادی قرار است یادگیری بردارها را سخت کند. به این موضوع در پری پروسس توجه ویژه ای کردیم و عبارت بالا را کاملا درست کردیم و نرمالایز کردیم. توضیح بیشتر در بخش پری پروسس آمده است.
+		
+	\end{enumerate}
+	
+	\pagebreak
+	
+	\section{فاز اول: پری پروسسینگ}
+	
+	در ابتدا سطر های تکراری را حذف کرده و سپس، برای پری پروسسینگ مراحل زیر را انجام دادیم و چنین پایپلاینی داشتیم:
+	\begin{latin}
+		\begin{table}[H]
+			\centering
+			\begin{tabular}{|l|l|}
+				\hline
+				\textbf{Step} & \textbf{Function} \\
+				\hline
+				0 & Normalize units and remove singletons \\
+				\hline
+				1 & Expand contractions \\
+				\hline
+				2 & Convert to lowercase \\
+				\hline
+				3 & Remove numbers \\
+				\hline
+				4 & Remove punctuation \\
+				\hline
+				5 & Remove special characters \& emojis \\
+				\hline
+				6 & Normalize whitespace \\
+				\hline
+				7 & Tokenize text \\
+				\hline
+				8 & Remove stopwords \\
+				\hline
+				9 & Lemmatize tokens \\
+				\hline
+				10 & Clean empty tokens \\
+				\hline
+			\end{tabular}
+			\label{tab:preprocessing_steps}
+		\end{table}
+	\end{latin}
+	
+	توضیحات بیشتر به شرح زیر است:
+	\begin{enumerate}
+		\item Normalize-units-and-remove-singletons
+		
+		همانطور که در بخش پروفایلینگ اشاره شد، واحدهای اندازه گیری مانند cm، gb، mhz به شکل استاندارد تبدیل شدند و کاراکترهای تکراری حذف شدند و نرمالایز شدند. 
+		
+		\item Expand-contractions
+		
+		برای جملاتی که عموما به شکل not+verb خلاصه می شوند به کار بردیم. 
+		\item Convert-to-lowercase
+		
+		برای این که همه کلمات یکنواخت باشند.
+		\item Remove-numbers
+		
+		از آنجا که اعداد نمی توانستند بردارهایی معنادار بسازند، همه اعداد را حذف کردیم
+		\item Remove-punctuation
+		
+		علائم نگارشی مانند کاما و نقطه برای تحلیل متن مفید نبودند و حذف شدند.
+		\item Remove-special-characters-\&-emojis
+		
+		کاراکترهای خاص و ایموجی ها که معنای خاصی برای مدل نداشتند حذف شدند.
+		\item Normalize-whitespace
+		
+		فاصله های اضافی و تب ها به یک فاصله ساده تبدیل شدند.
+		\item Tokenize-text
+		
+		متن به کلمات جداگانه تقسیم شد تا قابل پردازش باشد.
+		\item Remove-stopwords
+		
+		کلمات رایج و بی معنی مانند "the" و "and" حذف شدند.
+		\item Lemmatize-tokens
+		
+		کلمات به شکل ریشه ای خود تبدیل شدند تا تنوع کاهش یابد.
+		\item Clean-empty-tokens
+		
+		توکن های خالی و بی معنی از نتیجه نهایی حذف شدند.
+	\end{enumerate}
+	در نهایت یک مثال آورده می شود که اهمیت این پایپلاین دقیق تر نشان داده شود:
+	
+	جمله ورودی:
+	\begin{latin}
+		SAF 'Floral' Framed Painting (Wood, 30 inch x 10 inch, Special Effect UV Print Textured, SAO297) Painting made up in synthetic frame with UV textured print which gives multi effects and attracts towards it. This is an special series of paintings which makes your wall very beautiful and gives a royal touch (A perfect gift for your special ones).
+	\end{latin}
+	
+	و خروجی توکن های آن به این شکل در آمد:
+	\begin{latin}
+		['saf', 'floral', 'frame', 'paint', 'wood', 'numinch', 'special', 'effect', 'uv', 'print', 'textured', 'sao', 'painting', 'make', 'synthetic', 'frame', 'uv', 'textured', 'print', 'give', 'multi', 'effect', 'attract', 'towards', 'special', 'series', 'painting', 'make', 'wall', 'beautiful', 'give', 'royal', 'touch', 'perfect', 'gift', 'special', 'one']
+	\end{latin}
+	
+	مهم تر از همه توجهان را به بخش واحد های اندازه گیری جلب می کنیم که به جای 
+	\begin{latin}
+		inch inch 
+	\end{latin}
+	به چنین توکن (بدون تکرار و یکبار آمده) تبدیل شده
+	\begin{latin}
+		numinch
+	\end{latin}
+	و بنابراین کاملا هم ارتباط عدد و اندازه را حفظ می کند و هم اطلاعات با ارزشی را دور نمیریزد و هم نمایش بهتری را حاصل می شود.
+	
+	\pagebreak
+	
+	\section{فاز دوم: تبدیل به بردار های عددی}
+	
+	برای محاسبه TF از تابع
+	$compute\_tf $
+	را پیاده سازی کردیم.
+	این تابع با شمارش تعداد وقوع هر کلمه در یک سند و سپس تقسیم آن تعداد بر مجموع کلمات موجود در همان سند، میزان تکرار هر کلمه در سند را به‌دست می‌آورد که اهمیت نسبی هر کلمه را در داخل همان سند اندازه‌گیری کنیم.
+	
+	برای محاسبه IDF 
+	، 
+	تابع 
+	$compute\_idf$
+	پیاده سازی کردیم که در این تابع، ابتدا تعداد اسنادی که هر کلمه در آن‌ها وجود دارد شمارش می‌شود. سپس با استفاده از فرمول 
+	
+	$$log⁡(Ndf(t))\log \left( \frac{N}{df(t)} \right)log(df(t)N​)$$
+	
+	که در آن N تعداد کل اسناد و df(t) تعداد اسنادی است که کلمه t در آن‌ها ظاهر می‌شود، میزان IDF محاسبه می‌شود. 
+	
+	
+	در نهایت، با ترکیب مقادیر TF و IDF تابع نهایی برای هر کلمه در هر سند مقدار TF-IDF آن را محاسبه کرده و نتیجه را در قالب یک لیست از دیکشنری‌ها ذخیره می‌کند. این لیست، شامل TF-IDF کلمات در گروه های مختلف است.
+	
+	
+	به منظور انتخاب بهترین \lr{classifier} برای داده‌های خود، ابتدا به انجام هایپرپارامتر 
+	تیونینگ پرداختیم. از آنجا که تعداد مدل‌های مختلف و پارامترهای آن‌ها زیاد بود، 
+	تصمیم گرفتیم برای تسریع در روند تست مدل‌ها، از یک زیرمجموعه کوچک از داده‌ها 
+	استفاده کنیم.
+	
+	ما برای انجام هایپرپارامتر تیونینگ، دو مدل \lr{SVM} و \lr{Decision Tree} را در نظر 
+	گرفتیم. برای هرکدام از این مدل‌ها مجموعه‌ای از کاندیدها (بیگ‌بندی‌ها) را امتحان 
+	کردیم:
+	
+	\section*{۱. برای مدل \lr{SVM}:}
+	
+	\begin{itemize}[label=\textbullet]
+		\item با کرنل خطی (\lr{linear}) و پارامتر \lr{C} متفاوت (۱ و ۱۰).
+	\end{itemize}
+	
+	\begin{itemize}[label=\textbullet]
+		\item با کرنل \lr{rbf} و پارامترهای مختلف \lr{C} و \lr{gamma}.
+	\end{itemize}
+	
+	کاندیدهای مورد استفاده برای \lr{SVM} به شکل زیر بود:
+	
+	\begin{latin}
+		\begin{verbatim}
+			svm_configs = [
+			{'kernel': 'linear', 'C': 1},
+			{'kernel': 'linear', 'C': 10},
+			{'kernel': 'rbf', 'C': 1, 'gamma': 0.1},
+			{'kernel': 'rbf', 'C': 10, 'gamma': 0.01},
+		\end{verbatim}
+	\end{latin}
+	
+	\section*{۲. برای مدل \lr{Decision Tree}:}
+	
+	\begin{itemize}[label=\textbullet]
+		\item با معیار تصمیم‌گیری \lr{gini} و \lr{entropy} و پارامترهای \lr{max\_depth} و \lr{min\_samples\_split} مختلف.
+	\end{itemize}
+	
+	کاندیدهای مورد استفاده برای \lr{Decision Tree} به این صورت بودند:
+	
+	
+	\begin{latin}
+		\begin{verbatim}
+			dt_configs = [
+			{'criterion': 'gini', 'max_depth': 5,
+				'min_samples_split': 2},
+			{'criterion': 'gini', 'max_depth': 10,
+				'min_samples_split': 5},
+			{'criterion': 'entropy', 'max_depth': 5,
+				'min_samples_split': 2},
+			{'criterion': 'entropy', 'max_depth': 10,
+				'min_samples_split': 5},
+			]
+		\end{verbatim}
+	\end{latin}
+	
+	
+	برای کاهش زمان محاسبات و افزایش سرعت، تصمیم گرفتیم هایپرپارامتر تیونینگ را 
+	بر روی یک زیرمجموعه کوچک از داده‌ها انجام دهیم. این زیرمجموعه تنها ۱۰\% از 
+	داده‌های اصلی را شامل می‌شد که از طریق تابع \lr{train\_test\_split} ایجاد 
+	کردیم.
+	
+	%\begin{latin}
+	%	\begin{verbatim}
+		%		X_train_small, _, y_train_small, _ = 
+		%		train_test_split(X_train, y_train, 
+		%		test_size=0.9, random_state=42, 
+		%		stratify=y_train)
+		%		
+		%		X_test_small, _, y_test_small, _ = 
+		%		train_test_split(X_test, y_test, test_size=0.9, 
+		%		random_state=42, stratify=y_test)
+		%	\end{verbatim}
+	%\end{latin}
+	
+	پس از انجام هایپرپارامتر تیونینگ با استفاده از تابع 
+	\lr{hyperparametertuning\_tfidf}، بهترین کانفیگ انتخابی برای مدل 
+	\lr{SVM} به دست آمد که شامل کرنل خطی (\lr{linear}) و \lr{C} برابر با ۱۰ بود:
+	
+	\begin{latin}
+		\begin{verbatim}
+			best_config = {'kernel': 'linear', 'C': 10}
+		\end{verbatim}
+	\end{latin}
+	
+	این انتخاب در نهایت به عنوان بهترین تنظیمات مدل استفاده شد. این کار به ما این امکان 
+	را داد که بهترین عملکرد ممکن را در مدت زمان کم و با استفاده از منابع پردازشی 
+	محدود به‌دست آوریم. سپس با این کانفیگ مدل خود را train کردیم که نتایج آن در انتها داک بررسی شده است.
+	
+	
+	
+	\section*{انتخاب کانفیگ مناسب برای مدل \lr{Word2Vec}}
+	
+	سپس به به آموزش مدل \lr{Word2Vec} پرداختیم. برای آموزش این مدل، از 
+	کانفیگ های مختلف استفاده کردیم تا بهترین کانفیگ برای داده‌های خود را پیدا کنیم.
+	به دلیل عدم امکان دسترسی مستقیم به دقت نهایی مدل، برای ارزیابی عملکرد مدل از 
+	روش‌های ارزیابی کلی استفاده کردیم که به کمک آن می‌توانستیم کیفیت مدل را با توجه 
+	به روابط معنایی میان کلمات بسنجیم.
+	
+	دلیل استفاده از آزمون‌های کلی برای ارزیابی کیفیت مدل‌ها این بود که به طور مستقیم 
+	نمی‌توانستیم به دقت نهایی مدل دسترسی پیدا کنیم و بتوانیم توانایی مدل را در درک روابط معنایی 
+	بین کلمات مشابه و غیر مشابه بررسی کنیم؛ به عبارتی بررسی کردیم که 
+	مدل‌های مختلف چطور کلمات مشابه را به هم نزدیک کرده و کلمات غیر مشابه را از 
+	هم دور می‌کنند، بدون اینکه نیاز به ارزیابی مستقیم دقت مدل داشته باشیم.
+	
+	ما برای ارزیابی عملکرد مدل‌های مختلف، چندین پیکربندی مختلف از جمله اندازه 
+	بردار 
+	(\lr{vector size})، پنجره (\lr{window})، تعداد کلمات حداقل (\lr{min\_count}) 
+	و 
+	نوع مدل (\lr{Skip-Gram} یا \lr{CBOW}) را بررسی کردیم. این پیکربندی‌ها به شکل زیر 
+	بودند:
+	
+	\pagebreak
+	
+	\begin{latin}
+		\begin{verbatim}
+			configs = [
+			{"vector_size": 50, "window": 3,
+				"min_count": 1, "sg": 0}, # CBOW with small
+			vector size
+			
+			{"vector_size": 100, "window": 5,
+				"min_count": 1, "sg": 1}, # Skip-Gram with
+			larger window
+			
+			{"vector_size": 100, "window": 3,
+				"min_count": 2, "sg": 0}, # CBOW with stricter
+			frequency filtering
+			
+			{"vector_size": 200, "window": 5,
+				"min_count": 1, "sg": 1}, # Skip-Gram with
+			larger vector size
+			]
+		\end{verbatim}
+	\end{latin}
+	
+	\section*{ارزیابی مدل‌ها}
+	
+	برای ارزیابی کیفیت مدل‌ها از مواردی که بحث شد استفاده کردیم که شامل بررسی 
+	شباهت کلمات معنایی این آزمون‌ها بین کلمات مختلف می‌باشد. 
+	
+	\subsection*{جفت ‌های مشابه و غیرمشابه}
+	
 	\begin{table}[h]
 		\centering
-		\begin{tabular}{|l|l|}
+		\caption{جفت‌های مشابه}
+		\begin{tabular}{|c|c|}
 			\hline
-			\textbf{Property} & \textbf{Value} \\
+			\textbf{کلمه اول} & \textbf{کلمه دوم} \\
 			\hline
-			Shape & (58423, 2) \\
+			paint & painting \\
 			\hline
-			Columns & 'category' 'description' \\
+			frame & frames \\
 			\hline
-		\end{tabular}
-		\caption{اطلاعات کلی}
-	\end{table}
-	
-	\item 
-	بررسی تعداد سطر های null و یا تکراری:
-	
-	تعداد سطر های null برابر صفر بود، اما تعداد سطر های تکراری را برابر با مقدار تقریبی 22k بدست آوردیم که تقریبا 40 درصد دیتاست را تشکیل می داد. در فاز بعدی یعنی فاز اول: دیتا پریپروسسینگ، کل آنها را drop کردیم و فقط مقادیر unique را نگه داری کردیم. شایان ذکر است که در دیتاست اولیه، گاها حتی از یک دیتاپوینت بیش از 30 بار تکرار داشتیم.
-	
-	\item 
-	بررسی تعداد کتگوری ها و میزان درصد هرکدام از آنها:
-	\begin{figure}[h]
-		\centering
-		\includegraphics[scale=0.8]{assets/1.png}
-		\caption{\textcolor{CustomAccent}{توزیع کتگوری ها}}
-	\end{figure}
-	همانطور که در شکل 1 مشخص است، نزدیک به 40 درصد داده ها را به تنهایی کتگوری household تشکیل داده اند و closing کمترین درصد را به خود اختصاص داده که نشان می دهد ممکن است در مرحله فاز اخر با بایاس شدن به سمت کتگوری ها رو به رو شویم. در این رابطه در بخش اخر بیشتر توضیح داده شده است.
-	
-	\item 
-	بررسی کلمات پرتکرار هر کتگوری:
-	
-	در ابتدا به شکل خام و سپس با اعمال حذف به شکل ساده این کار را انجام دادیم.
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.5]{assets/2.png}
-	\caption{\textcolor{CustomAccent}{نتیجه خام}}
-\end{figure}
-همانطور که در شکل 2 مشخص است نشان داده می شود که باید حذفیات کلمات غیرضروری اضافه صورت بگیرد تا بتوان  به داده معناداری رسید.
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.5]{assets/3.png}
-	\caption{\textcolor{CustomAccent}{نتیجه با اعمال حذف کلمات غیرضروری}}
-\end{figure}
-
-نتیجه شکل 3 به طور کلی نشان می دهد که کلمات به خوبی در دامنه خود قابل تشخیص هستند.
-
-	\item 
-	
-	بررسی n-gram ها به ازای 2 و 3:
-	\begin{figure}[H]
-		\centering
-		\includegraphics[scale=0.5]{assets/4.png}
-		\caption{\textcolor{CustomAccent}{بررسی 2گرم ها}}
-	\end{figure}
-	
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[scale=0.5]{assets/5.png}
-		\caption{\textcolor{CustomAccent}{بررسی 3گرم ها}}
-	\end{figure}
-
-شکل های 4 و 5 را بررسی کنید. با توجه به n-gram ها میتوان توجه ویژه ای به واحد ها و یونیت های اندازه گیری ای کرد. به این شکل که وقتی عبارتی نظیر:
-\begin{latin}
-	a good quality table with 150 cm * 24 cm * 90 cm
-\end{latin}
-رو به رو می شویم، پس از حذف ستاره و عدد ها با عبارت:
-\begin{latin}
-	cm cm cm 
-\end{latin}
-رو به رو می شویم که به این صورت بیش از 400 بار در دو کتگوری متفاوت رخ داده است و به طرز زیادی قرار است یادگیری بردارها را سخت کند. به این موضوع در پری پروسس توجه ویژه ای کردیم و عبارت بالا را کاملا درست کردیم و نرمالایز کردیم. توضیح بیشتر در بخش پری پروسس آمده است.
-
-\end{enumerate}
-
-\pagebreak
-
-\section{فاز اول: پری پروسسینگ}
-
-در ابتدا سطر های تکراری را حذف کرده و سپس، برای پری پروسسینگ مراحل زیر را انجام دادیم و چنین پایپلاینی داشتیم:
-\begin{latin}
-	\begin{table}[H]
-		\centering
-		\begin{tabular}{|l|l|}
+			gift & present \\
 			\hline
-			\textbf{Step} & \textbf{Function} \\
+			wood & timber \\
 			\hline
-			0 & Normalize units and remove singletons \\
+			canvas & fabric \\
 			\hline
-			1 & Expand contractions \\
-			\hline
-			2 & Convert to lowercase \\
-			\hline
-			3 & Remove numbers \\
-			\hline
-			4 & Remove punctuation \\
-			\hline
-			5 & Remove special characters \& emojis \\
-			\hline
-			6 & Normalize whitespace \\
-			\hline
-			7 & Tokenize text \\
-			\hline
-			8 & Remove stopwords \\
-			\hline
-			9 & Lemmatize tokens \\
-			\hline
-			10 & Clean empty tokens \\
+			art & artwork \\
 			\hline
 		\end{tabular}
-		\label{tab:preprocessing_steps}
 	\end{table}
+	
+	\begin{table}[h]
+		\centering
+		\caption{جفت‌های غیر مشابه}
+		\begin{tabular}{|c|c|}
+			\hline
+			\textbf{کلمه اول} & \textbf{کلمه دوم} \\
+			\hline
+			paint & table \\
+			\hline
+			frame & gift \\
+			\hline
+			art & kitchen \\
+			\hline
+			wall & water \\
+			\hline
+			home & camera \\
+			\hline
+			light & shoe \\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	\section*{نحوه ارزیابی کانفیگ ها}
+	
+	برای هر کانفیگ، ابتدا مدل \lr{Word2Vec} را با تنظیمات خاص خود آموزش دادیم و 
+	سپس شباهت کسینوسی بین کلمات مشابه و غیر مشابه را محاسبه کردیم. این شباهت‌ها 
+	به ما کمک کردند تا کیفیت مدل را ارزیابی کنیم. در نهایت، میانگین شباهت‌ها برای 
+	جفت‌های مشابه و غیر مشابه محاسبه شد.
+	
+	با استفاده از نتایج به‌دست آمده کانفیگ 
+	\begin{latin}
+	\lr{best\_config = \{"vector\_size": 200, "window": 5, "min\_count": 1, "sg": 1\}}
+	\end{latin}
+		را برگزیدیم و مدل را تریین کردیم.
+		
+نمودار زیر نیز برای مدل word2vec برای بیان ارتباط میان لغات آورده شده است:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.4]{assets/12.png}
+\end{figure}
+	
+	شکل واضح تر را در انتهای کد جوپیتر می توانید ببینید. 
+	\section{فاز سوم: طبقه بندی و ویژوالیزیشن}
+
+	
+	پس از آموزش مدل \lr{Word2Vec} و ارزیابی آن با استفاده از روش‌های مختلف، از دو 
+	روش متفاوت برای استفاده از این بردارها به منظور دستیابی به عملکرد استاندارد استفاده کردیم:
+
+	
+	\subsection*{۱. روش اول: استفاده از میانگین بردارهای \lr{Word2Vec}}
+	
+	در این روش، برای هر داک، میانگین بردارهای کلمات آن که توسط مدل 
+	\lr{Word2Vec} تولید شده‌اند محاسبه شد. این روش به این صورت است که برای 
+	هر کلمه در سند، بردار مربوطه از مدل \lr{Word2Vec} استخراج می ‌شود و 
+	میانگین آن‌ها به عنوان نمایندۀ سند در نظر گرفته می‌شود. پس از آن، از این 
+	ویژگی‌ها برای آموزش مدل دستۀ‌بندی \lr{SVM} استفاده شد.
+	
+	تابع \lr{train\_word2vecavg} برای این کار پیاده‌سازی شده است که از 
+	\lr{document\_vector\_avg} برای محاسبۀ میانگین بردارهای کلمات هر 
+	سند استفاده می‌کند.
+	
+	\subsection*{۲. روش دوم: استفاده از ترکیب \lr{TF-IDF} و \lr{Word2Vec}}
+	
+	در این روش، ابتدا از ترکیب \lr{TF-IDF} برای وزن‌دهی به کلمات هر سند استفاده کردیم 
+	و سپس این وزن‌ها را با بردارهای \lr{Word2Vec} ترکیب کردیم. برای هر کلمه 
+	در سند، بردار \lr{Word2Vec} از استخراج شده و با وزن مربوطه از \lr{TF-IDF} 
+	ضرب می‌شود. سپس میانگین این بردارها به عنوان نمایندۀ سند در نظر گرفته 
+	می‌شود. این روش به ما امکان می‌دهد که اهمیت کلمات مهم‌تر را با استفاده از 
+	وزن‌های \lr{TF-IDF} در مدل \lr{Word2Vec} لحاظ کنیم.
+	
+	تابع \lr{train\_word2vectfidf} برای این روش پیاده‌سازی شده است. 
+	این تابع ابتدا مدل \lr{TF-IDF} را روی داده‌های آموزشی آموزش داده و سپس از آن برای وزن‌دهی 
+	به بردارهای \lr{Word2Vec} استفاده می‌کند.
+	
+	در هر دو روش، پس از استخراج ویژگی‌ها، داده‌ها به مجموعه‌های آموزشی و از میانۀ 
+	تقسیم شده و مدل دستۀ‌بندی \lr{SVM} با استفاده از داده‌های آموزشی آموزش داده شد. 
+	سپس، دقت مدل روی داده‌های آزمایشی ارزیابی گردید که این دقت ها در فاز چهارم داکیومنت بررسی شده اند.
+	
+در نهایت با کاهش ابعاد بردار ها به دو بعد با استفاده از pca، به چنین پلات هایی رسیدیم:
+ 
+ 	
+ \begin{figure}[H]
+ 	\centering
+ 	\includegraphics[scale=0.6]{assets/9.png}
+ 	\caption{\textcolor{CustomAccent}{tfidf}}
+ \end{figure}
+
+
+ \begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.6]{assets/10.png}
+	\caption{\textcolor{CustomAccent}{word2vec avg}}
+\end{figure}
+
+
+ \begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.6]{assets/11.png}
+	\caption{\textcolor{CustomAccent}{word2vec+tfidf}}
+\end{figure}
+
+همانطور که مشخص است بعد از کاهش ابعاد به دو بعد در مدل های  word2vec نقاط پخش هستند  در حالی که در مدل tfidf نقاط کلاس ها یکسان روی هم افتاده اند که این به دو دلیل است:
+1- تعداد ابعاد بردار ها در مدل ها word2vec کمتر از مدل tfidf است.(در مورد مدل ها word2vec این عدد 200 است اما در مورد tfidf این عدد به اندازه تعداد کلمات است.) نتیجتا پس از کاهش ابعاد فاصله نقاط مدل ها word2vec بیشتر خواهد بود.
+2- در بردارهای TF-IDF تفاوت‌ها بین سمپل ها  کلاس‌ها متفاوت خیلی بیشتر است و تفاوت بین سمپل ها کلاس ها مشابه به مراتب کمتر است. اما در Word2Vec چون ما از میانگین بردارهای کلمات استفاده کردیم، تفاوت‌ بین سمپل ها کلاس‌ها مشابه کمتراست و تفاوت بین سمپل ها کلاس ها متفاوت کمتر است. در نتیجه پس از کاهش ابعاد فاصله نقاط مدل tfidf کمتر خواهد بود.
+	
+	
+	\section{فاز چهارم: ارزیابی عملکرد}
+	
+	
+	برای هر سه مدل با استفاده از تابع \lr{evaluate\_model} معیارهای \lr{accuracy}، 
+	\lr{precision}، \lr{recall} و \lr{confusion matrix} را نمایش دادیم:
+	
+	\subsection*{\lr{Tfidf}:}
+	
+	\begin{latin}
+		\begin{verbatim}
+			Accuracy: 0.9529
+			Precision: 0.9531
+			Recall: 0.9529
+		\end{verbatim}
+	\end{latin}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.6]{assets/6.png}
+		\caption{\textcolor{CustomAccent}{ماتریس TFIDF}}
+	\end{figure}
+	
+	
+\subsection*{\lr{Word2vecavg}:}
+	
+\begin{latin}
+	\begin{verbatim}
+		Accuracy: 0.9311
+		Precision: 0.9315
+		Recall: 0.9311
+	\end{verbatim}
 \end{latin}
 
-توضیحات بیشتر به شرح زیر است:
+		
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.6]{assets/7.png}
+	\caption{\textcolor{CustomAccent}{ماتریس Word2vecavg}}
+\end{figure}
+	
+	
+	
+\subsection*{\lr{word2vectfidf}:}
+
+\begin{latin}
+	\begin{verbatim}
+		Accuracy: 0.9336
+		Precision: 0.9339
+		Recall: 0.9336
+	\end{verbatim}
+\end{latin}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.6]{assets/8.png}
+	\caption{\textcolor{CustomAccent}{ماتریس word2vectfidf}}
+\end{figure}
+
+
+\subsection*{۱. دقت \lr{TF-IDF} بالاتر از \lr{Word2Vec} با میانگین‌گیری:}
+
+\begin{itemize}[label=\textbullet]
+	\item \lr{TF-IDF (0.9529)} به طور قابل توجهی دقت بیشتری نسبت به 
+	\lr{Word2Vec} با میانگین‌گیری \lr{(0.9311)} دارد. این نشان می‌دهد که 
+	\lr{TF-IDF} توانسته ویژگی‌های مهم‌تر هر سند را شناسایی کند و تاثیر 
+	مثبت‌تری در فرآیند دسته‌بندی داشته باشد.
+\end{itemize}
+
+\begin{itemize}[label=\textbullet]
+	\item \textbf{دلایل:}
+	\lr{TF-IDF} قادر است کلمات مهم و متمایز کننده را با وزن بیشتر در نظر 
+	بگیرد و این موضوع کمک می‌کند که مدل در شبیه‌سازی و تفکیک 
+	دسته‌ها بهتر عمل کند. برخلاف \lr{Word2Vec} که صرفاً به روابط معنایی 
+	بین کلمات توجه دارد، \lr{TF-IDF} مستقیماً بر اساس حضور کلمات در سند
+و تعداد دفعات آن‌ها در اسناد مختلف عمل می‌کند. این ویژگی باعث 
+می‌شود که \lr{TF-IDF} برای بسیاری از مسائل دسته‌بندی متنی به ویژه در 
+داده‌های کوچک یا با پیچیدگی کم‌تر عملکرد بهتری داشته باشد.
+\end{itemize}
+
+
+\subsection*{۲. \lr{Word2Vec} با میانگین‌گیری و کمک \lr{TF-IDF (0.9336)}:}
+
+\begin{itemize}[label=\textbullet]
+	\item ترکیب \lr{Word2Vec} با \lr{TF-IDF} عملکرد بهتری نسبت به 
+	\lr{Word2Vec} با میانگین‌گیری دارد (دقت
+	 \lr{۰.۹۳۳۶}
+	 در مقابل 
+	\lr{۰.۹۳۱۱}
+	).
+	 این نشان می‌دهد که اضافه کردن وزن‌های \lr{TF-IDF} به 
+	بردارهای \lr{Word2Vec} کمک می‌کند که مدل بتواند ویژگی‌های 
+	کلمات مهم‌تر را بهتر شبیه‌سازی کند.
+\end{itemize}
+
+\begin{itemize}[label=\textbullet]
+	\item \textbf{دلیل:}
+	استفاده از وزن‌های \lr{TF-IDF} در ترکیب با \lr{Word2Vec} می‌تواند به 
+	مدل کمک کند تا روی کلمات با وزن بیشتر (از نظر اطلاعاتی) تمرکز 
+	کند و در عین حال از توانایی‌های معنایی \lr{Word2Vec} برای شبیه‌سازی 
+	روابط بین کلمات استفاده کند. با این حال، ترکیب این دو ویژگی در این 
+	مرحله نتایج خیلی بهینه نبوده و شاید نیاز به تنظیمات بیشتری داشته باشد 
+	تا این ترکیب به نتیجه مطلوب‌تر برسد.
+\end{itemize}
+
+
+\section*{دلایل بالاتر بودن عملکرد \lr{TF-IDF} نسبت به \lr{Word2Vec}:}
+
 \begin{enumerate}
-	\item Normalize-units-and-remove-singletons
-	
-	همانطور که در بخش پروفایلینگ اشاره شد، واحدهای اندازه گیری مانند cm، gb، mhz به شکل استاندارد تبدیل شدند و کاراکترهای تکراری حذف شدند و نرمالایز شدند. 
-	
-	\item Expand-contractions
-	
-	برای جملاتی که عموما به شکل not+verb خلاصه می شوند به کار بردیم. 
-	\item Convert-to-lowercase
-	
-	برای این که همه کلمات یکنواخت باشند.
-	\item Remove-numbers
-	
-	از آنجا که اعداد نمی توانستند بردارهایی معنادار بسازند، همه اعداد را حذف کردیم
-	\item Remove-punctuation
-	
-	علائم نگارشی مانند کاما و نقطه برای تحلیل متن مفید نبودند و حذف شدند.
-	\item Remove-special-characters-\&-emojis
-	
-	کاراکترهای خاص و ایموجی ها که معنای خاصی برای مدل نداشتند حذف شدند.
-	\item Normalize-whitespace
-	
-	فاصله های اضافی و تب ها به یک فاصله ساده تبدیل شدند.
-	\item Tokenize-text
-	
-	متن به کلمات جداگانه تقسیم شد تا قابل پردازش باشد.
-	\item Remove-stopwords
-	
-	کلمات رایج و بی معنی مانند "the" و "and" حذف شدند.
-	\item Lemmatize-tokens
-	
-	کلمات به شکل ریشه ای خود تبدیل شدند تا تنوع کاهش یابد.
-	\item Clean-empty-tokens
-	
-	توکن های خالی و بی معنی از نتیجه نهایی حذف شدند.
+
+\item
+{ویژگی‌های مستقیماً قابل تفسیر}
+
+\lr{TF-IDF} یک روش مستقیماً قابل تفسیر است که بر اساس تعداد تکرار کلمات در هر سند و در کل مجموعه داده‌ها عمل می‌کند. این ویژگی می‌تواند مستقیماً برای الگوریتم‌های ماشین لرنینگ مثل \lr{SVM}، که به ورودی‌های عددی و ساختار یافته نیاز دارند، مناسب باشند. در نتیجه، این ویژگی‌ها برای غیرمتخصصان و کاربران عملکرد و تفکیک دقیق‌تر دسته‌ها کار آمدتر هستند.
+
+\item 
+{مناسب بودن \lr{TF-IDF} برای داده‌های کوچک و پیچیدگی کم}
+
+\lr{TF-IDF} به دلیل سادگی و سرعت بالا در پردازش، برای داده‌های کوچک و با پیچیدگی کم بسیار مناسب است. این الگوریتم به طور مستقیم تعداد و توزیع کلمات را بررسی کرده و کلمات با ویژگی‌های مهم‌تر را در نظر می‌گیرد، که باعث می‌شود مدل سریع‌تر و با دقت بیشتری عمل کند، به‌ویژه در مجموعه‌ی داده‌هایی که اطلاعات معنایی پیچیده کمتری دارند.
+
+\item 
+{عدم وابستگی به داده‌های بزرگ و تعداد زیاد کلمات}
+
+یکی از چالش‌های \lr{Word2Vec} این است که به مجموعه داده‌های بزرگی نیاز دارد تا بتواند روابط معنایی بین کلمات را به درستی مدل‌سازی کند. در حالی که \lr{TF-IDF} از خود داده‌های کوچک‌تر برای تشخیص و دسته‌بندی استفاده می‌کند. بنابراین، زمانی که داده‌های آموزشی محدود باشد، \lr{TF-IDF} می‌تواند عملکرد بهتر از \lr{Word2Vec} داشته باشد.
+
+\item 
+{کمبود داده‌های آموزشی برای \lr{Word2Vec}}
+
+مدل‌های \lr{Word2Vec} برای آموزش بهتر نیاز به داده‌های بیشتری دارند تا بتوانند روابط معنایی بین کلمات را به درستی یاد بگیرند. وقتی داده‌ها کافی نیستند، این مدل ممکن است نتایج دقیق‌تری نسبت به روش‌های ساده‌تری مانند \lr{TF-IDF} نداشد. بنابراین، زمانی که مجموعه داده‌ها محدود باشد، \lr{TF-IDF} می‌تواند عملکرد بهتری داشته باشد.
+
+
 \end{enumerate}
-در نهایت یک مثال آورده می شود که اهمیت این پایپلاین دقیق تر نشان داده شود:
-
-جمله ورودی:
-\begin{latin}
-	SAF 'Floral' Framed Painting (Wood, 30 inch x 10 inch, Special Effect UV Print Textured, SAO297) Painting made up in synthetic frame with UV textured print which gives multi effects and attracts towards it. This is an special series of paintings which makes your wall very beautiful and gives a royal touch (A perfect gift for your special ones).
-\end{latin}
-
-و خروجی توکن های آن به این شکل در آمد:
-\begin{latin}
-	['saf', 'floral', 'frame', 'paint', 'wood', 'numinch', 'special', 'effect', 'uv', 'print', 'textured', 'sao', 'painting', 'make', 'synthetic', 'frame', 'uv', 'textured', 'print', 'give', 'multi', 'effect', 'attract', 'towards', 'special', 'series', 'painting', 'make', 'wall', 'beautiful', 'give', 'royal', 'touch', 'perfect', 'gift', 'special', 'one']
-\end{latin}
-
-مهم تر از همه توجهان را به بخش واحد های اندازه گیری جلب می کنیم که به جای 
-\begin{latin}
-	inch inch 
-\end{latin}
-به چنین توکن (بدون تکرار و یکبار آمده) تبدیل شده
-\begin{latin}
-	numinch
-\end{latin}
-و بنابراین کاملا هم ارتباط عدد و اندازه را حفظ می کند و هم اطلاعات با ارزشی را دور نمیریزد و هم نمایش بهتری را حاصل می شود.
 
 
 \end{document}
